@@ -30,6 +30,8 @@ use_default_key(){
     openssl pkcs12 -export -out /lumen/lumen.p12 -inkey /lumen/lumen_key.pem -in /lumen/lumen_crt.pem  \
 	    -passin "pass:" -passout "pass:" || die "Exporting key"
     openssl x509 -in /lumen/lumen_crt.pem -out $CFGPATH/hexrays.crt -passin "pass:" || die "Exporting hexrays.crt"
+    echo "Generated key exported to $CFGPATH"
+    cp /lumen/lumen.p12 "$CFGPATH"
     echo "hexrays.crt added to mounted volume.  Copy this to your IDA install dir." ;
     sed -i -e "s,server_cert.*,server_cert = \"${KEYPATH}\"," /lumen/config.toml ;
 }
