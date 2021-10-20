@@ -43,7 +43,8 @@ setup_tls_key(){
         KEYPATH="/lumen/${KEYNAME}"
         echo "Starting lumen with custom TLS certificate ${KEYNAME}" ;
         cp "${PRIVKEY}" $KEYPATH ;
-        openssl pkcs12 -in $KEYPATH ${PASSIN} -clcerts -nokeys -out $CFGPATH/hexrays.crt || die "Exporting hexrays.crt from private key. If there's a password, add it in .env as PKCSPASSWD=...";
+        openssl pkcs12 -in $KEYPATH ${PASSIN} -clcerts -nokeys -out $KEYPATH/hexrays.crt || die "Exporting hexrays.crt from private key. If there's a password, add it in .env as PKCSPASSWD=...";
+        sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' "$KEYPATH/hexrays.crt" > "$CFGPATH/hexrays.crt"
         echo "hexrays.crt added to mounted volume.  Copy this to your IDA install dir." ;
         sed -i -e "s,server_cert.*,server_cert = \"${KEYPATH}\"," /lumen/config.toml
     else
