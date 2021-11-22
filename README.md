@@ -69,6 +69,12 @@ No attempt is made to merge function data - this may casuse a situation where me
 Instead, the metadata with the highest calculated score is returned to the user.
 
 
+## Get info from DB
+
+### Get info by function name
+```sh
+sudo docker exec --env PGPASSWORD=1 -it lumina-postgres psql -A -U lumina -d lumina --no-password -P pager=off -c "select encode(files.chksum, 'hex'), file_path, funcs.name  from funcs join dbs on funcs.db_id = dbs.id join files on dbs.file_id = files.id where funcs.name like 'sm_%' ;" -F';'
+```
 ---
 
 Developed by [Naim A.](https://github.com/naim94a); License: MIT.
